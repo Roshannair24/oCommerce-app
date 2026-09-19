@@ -1,0 +1,159 @@
+{%- comment -%}
+  snippets/countdown-timer.liquid
+  Renders a countdown timer for one block.
+  Usage (inside a section's block loop):
+    {% render 'countdown-timer', block: block, section_id: section.id %}
+  All settings come from block.settings; ids are scoped to block.id so several timers can share a page.
+{%- endcomment -%}
+
+{%- liquid
+  assign bid = block.id
+  assign s = block.settings
+-%}
+
+<div
+  id="Countdown-{{ bid }}"
+  class="cdt"
+  data-date="{{ s.end_date | escape }}"
+  data-time="{{ s.end_time | escape }}"
+  data-offset="{{ s.timezone }}"
+  data-on-end="{{ s.on_end }}"
+  style="
+    --cdt-box: {{ s.box_color }};
+    --cdt-box-text: {{ s.box_text_color }};
+  "
+  {{ block.shopify_attributes }}
+  hidden
+>
+  {%- if s.heading != blank -%}
+    <h3 class="cdt__heading">{{ s.heading | escape }}</h3>
+  {%- endif -%}
+  {%- if s.subheading != blank -%}
+    <p class="cdt__sub" data-cdt-sub>{{ s.subheading | escape }}</p>
+  {%- endif -%}
+
+  <div class="cdt__timer" data-cdt-timer role="timer" aria-label="{{ s.heading | escape }}">
+    <div class="cdt__unit"><span class="cdt__num" data-cdt-days>00</span><span class="cdt__label">{{ s.label_days | escape }}</span></div>
+    <div class="cdt__unit"><span class="cdt__num" data-cdt-hours>00</span><span class="cdt__label">{{ s.label_hours | escape }}</span></div>
+    <div class="cdt__unit"><span class="cdt__num" data-cdt-minutes>00</span><span class="cdt__label">{{ s.label_minutes | escape }}</span></div>
+    <div class="cdt__unit"><span class="cdt__num" data-cdt-seconds>00</span><span class="cdt__label">{{ s.label_seconds | escape }}</span></div>
+  </div>
+
+  <div class="cdt__ended" data-cdt-ended role="status" hidden>
+    <p class="cdt__ended-text">{{ s.ended_message | escape }}</p>
+    {%- if s.ended_button_label != blank and s.ended_button_link != blank -%}
+      <a class="cdt__btn" href="{{ s.ended_button_link }}">{{ s.ended_button_label | escape }}</a>
+    {%- endif -%}
+  </div>
+</div>
+
+<noscript><style>#Countdown-{{ bid }}[hidden]{display:block !important}</style></noscript>
+
+<style>
+  #Countdown-{{ bid }} { width: 100%; }
+  #Countdown-{{ bid }}[hidden], #Countdown-{{ bid }} [hidden] { display: none !important; }
+  #Countdown-{{ bid }} .cdt__heading { margin: 0 0 .4em; }
+  #Countdown-{{ bid }} .cdt__sub { margin: 0 0 1em; opacity: .85; }
+  #Countdown-{{ bid }} .cdt__timer { display: flex; flex-wrap: wrap; gap: clamp(6px, 1.5vw, 14px); }
+  #Countdown-{{ bid }} .cdt__unit {
+    display: flex; flex-direction: column; align-items: center;
+    min-width: clamp(56px, 9vw, 88px); padding: .6em .4em;
+    background: var(--cdt-box); color: var(--cdt-box-text); border-radius: 8px;
+  }
+  #Countdown-{{ bid }} .cdt__num {
+    font-size: clamp(1.5rem, 4vw, 2.6rem); font-weight: 700; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  #Countdown-{{ bid }} .cdt__label {
+    margin-top: .4em; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; opacity: .8;
+  }
+  #Countdown-{{ bid }} .cdt__ended-text { margin: 0 0 1em; font-weight: 600; }
+  #Countdown-{{ bid }} .cdt__btn {
+    display: inline-block; padding: .8em 1.6em; border-radius: 6px; text-decoration: none;
+    background: var(--cdt-box); color: var(--cdt-box-text); font-weight: 600;
+  }
+</style>
+
+<script>
+  (function () {
+    var ROOT_ID = 'Countdown-{{ bid }}';
+    var SECTION_ID = '{{ section_id }}';
+    var timerId = null;
+
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+    function parseTarget(root) {
+      var d = (root.dataset.date || '').trim();       // YYYY-MM-DD
+      var t = (root.dataset.time || '00:00').trim();  // HH:MM
+      var off = root.dataset.offset || '+00:00';      // e.g. +05:30
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return NaN;
+      if (!/^\d{1,2}:\d{2}$/.test(t)) t = '00:00';
+      if (t.length === 4) t = '0' + t;
+      return new Date(d + 'T' + t + ':00' + off).getTime();
+    }
+
+    function init() {
+      var root = document.getElementById(ROOT_ID);
+      if (!root) return;
+      if (timerId) { clearInterval(timerId); timerId = null; }
+
+      var q = function (s) { return root.querySelector(s); };
+      var els = {
+        d: q('[data-cdt-days]'), h: q('[data-cdt-hours]'),
+        m: q('[data-cdt-minutes]'), s: q('[data-cdt-seconds]'),
+        timer: q('[data-cdt-timer]'), ended: q('[data-cdt-ended]'), sub: q('[data-cdt-sub]')
+      };
+      var inEditor = window.Shopify && Shopify.designMode;
+      var target = parseTarget(root);
+
+      // Reset to running state (matters on editor re-init)
+      els.timer.hidden = false; els.ended.hidden = true;
+      if (els.sub) els.sub.hidden = false;
+
+      if (isNaN(target)) {
+        root.hidden = !inEditor;
+        if (inEditor) {
+          els.timer.hidden = true; els.ended.hidden = false;
+          els.ended.querySelector('.cdt__ended-text').textContent = 'Set a valid end date (YYYY-MM-DD) in the block settings.';
+        }
+        return;
+      }
+
+      function showEnded() {
+        if (timerId) { clearInterval(timerId); timerId = null; }
+        // "hide" removes only this block's content, so the column layout stays intact.
+        // Never hide in the theme editor, or the merchant can't select the block.
+        if (root.dataset.onEnd === 'hide' && !inEditor) { root.hidden = true; return; }
+        els.timer.hidden = true;
+        if (els.sub) els.sub.hidden = true;
+        els.ended.hidden = false;
+        root.hidden = false;
+      }
+
+      function tick() {
+        var diff = target - Date.now();
+        if (diff <= 0) { showEnded(); return false; }
+        var secs = Math.floor(diff / 1000);
+        els.d.textContent = pad(Math.floor(secs / 86400));
+        els.h.textContent = pad(Math.floor((secs % 86400) / 3600));
+        els.m.textContent = pad(Math.floor((secs % 3600) / 60));
+        els.s.textContent = pad(secs % 60);
+        return true;
+      }
+
+      if (tick()) {
+        root.hidden = false;
+        timerId = setInterval(tick, 250); // Date.now() each tick = no drift, survives throttled tabs
+      }
+    }
+
+    init();
+    // Theme editor: section re-renders when a block setting changes.
+    document.addEventListener('shopify:section:load', function (e) {
+      if (e.detail && e.detail.sectionId === SECTION_ID) init();
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) init();
+    });
+  })();
+</script>

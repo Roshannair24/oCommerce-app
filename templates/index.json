@@ -25,11 +25,26 @@
       "block_order": ["cta"],
       "settings": {
         "background_image": "shopify://shop_images/75f75bc7f1d0ffb86ffcd889637cde77b8d6f5f6_1.png",
-        "foreground_image":"shopify://shop_images/Text_Frame.png",
+        "foreground_image":"shopify://shop_images/Text_Frame.png"
       }
+    },
+  "timer_mail_multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "col_1": { "type": "countdown-timer-v1", "settings": { "heading": "New Drop coming soon" } },
+        "col_2": { "type": "column", "settings": { "title": "Easy returns" } }
+      },
+      "block_order": ["col_1", "col_2"],
+      "settings": { "columns_desktop": 2,
+    
+       "title":"",
+      "button_label": ""
+    },
+   
     },
     "image_banner": {
       "type": "image-banner",
+       "disabled": true,
       "blocks": {
         "heading": {
           "type": "heading",
@@ -68,6 +83,7 @@
       }
     },
     "featured_collection": {
+       "disabled": true,
       "type": "featured-collection",
       "settings": {
         "title": "Featured products",
@@ -98,6 +114,7 @@
   },
   "order": [
     "hero_cover",
+    "timer_mail_multicolumn",
     "image_banner",
     "featured_collection"
   ]

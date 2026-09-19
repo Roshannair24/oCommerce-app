@@ -58,7 +58,8 @@
         -%}
         {%- for block in section.blocks -%}
           {%- assign empty_column = '' -%}
-          {%- if block.settings.image == blank
+          {%- if block.type == 'column'
+            and block.settings.image == blank
             and block.settings.title == blank
             and block.settings.text == blank
             and block.settings.link_label == blank
@@ -75,6 +76,11 @@
               style="--animation-order: {{ forloop.index }};"
             {% endif %}
           >
+            {%- if block.type == 'countdown-timer-v1' -%}
+              <div class="multicolumn-card content-container">
+                {% render 'countdown-timer', block: block, section_id: section.id %}
+              </div>
+            {%- else -%}
             <div class="multicolumn-card content-container">
               {%- if block.settings.image != blank -%}
                 {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'circle' %}
@@ -142,6 +148,7 @@
                 {%- endif -%}
               </div>
             </div>
+            {%- endif -%}
           </li>
         {%- endfor -%}
       </ul>
@@ -431,6 +438,203 @@
           "type": "url",
           "id": "link",
           "label": "t:sections.multicolumn.blocks.column.settings.link.label"
+        }
+      ]
+    },
+    {
+      "type": "countdown-timer-v1",
+      "name": "Countdown timer",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Deadline"
+        },
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "End date",
+          "info": "Format: YYYY-MM-DD, e.g. 2026-11-29",
+          "default": "2026-12-31"
+        },
+        {
+          "type": "text",
+          "id": "end_time",
+          "label": "End time (24h)",
+          "info": "Format: HH:MM, e.g. 23:59",
+          "default": "23:59"
+        },
+        {
+          "type": "select",
+          "id": "timezone",
+          "label": "Time zone",
+          "info": "The date and time above are read in this zone, so every visitor sees the same deadline.",
+          "default": "+05:30",
+          "options": [
+            {
+              "value": "-12:00",
+              "label": "UTC-12:00"
+            },
+            {
+              "value": "-10:00",
+              "label": "UTC-10:00 (Hawaii)"
+            },
+            {
+              "value": "-08:00",
+              "label": "UTC-08:00 (Pacific, standard)"
+            },
+            {
+              "value": "-07:00",
+              "label": "UTC-07:00 (Mountain / Pacific DST)"
+            },
+            {
+              "value": "-06:00",
+              "label": "UTC-06:00 (Central)"
+            },
+            {
+              "value": "-05:00",
+              "label": "UTC-05:00 (Eastern, standard)"
+            },
+            {
+              "value": "-04:00",
+              "label": "UTC-04:00 (Eastern DST)"
+            },
+            {
+              "value": "-03:00",
+              "label": "UTC-03:00 (Brasilia)"
+            },
+            {
+              "value": "+00:00",
+              "label": "UTC+00:00 (London, standard)"
+            },
+            {
+              "value": "+01:00",
+              "label": "UTC+01:00 (Paris, Berlin / London DST)"
+            },
+            {
+              "value": "+02:00",
+              "label": "UTC+02:00 (Athens, Cairo)"
+            },
+            {
+              "value": "+03:00",
+              "label": "UTC+03:00 (Moscow, Riyadh)"
+            },
+            {
+              "value": "+04:00",
+              "label": "UTC+04:00 (Dubai)"
+            },
+            {
+              "value": "+05:30",
+              "label": "UTC+05:30 (India)"
+            },
+            {
+              "value": "+07:00",
+              "label": "UTC+07:00 (Bangkok)"
+            },
+            {
+              "value": "+08:00",
+              "label": "UTC+08:00 (Singapore, Perth)"
+            },
+            {
+              "value": "+09:00",
+              "label": "UTC+09:00 (Tokyo)"
+            },
+            {
+              "value": "+10:00",
+              "label": "UTC+10:00 (Sydney, standard)"
+            },
+            {
+              "value": "+12:00",
+              "label": "UTC+12:00 (Auckland, standard)"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Sale ends in"
+        },
+      
+        {
+          "type": "text",
+          "id": "label_days",
+          "label": "Days label",
+          "default": "Days"
+        },
+        {
+          "type": "text",
+          "id": "label_hours",
+          "label": "Hours label",
+          "default": "Hours"
+        },
+        {
+          "type": "text",
+          "id": "label_minutes",
+          "label": "Minutes label",
+          "default": "Minutes"
+        },
+        {
+          "type": "text",
+          "id": "label_seconds",
+          "label": "Seconds label",
+          "default": "Seconds"
+        },
+        {
+          "type": "header",
+          "content": "When the timer reaches zero"
+        },
+        {
+          "type": "select",
+          "id": "on_end",
+          "label": "Action at zero",
+          "default": "message",
+          "options": [
+            {
+              "value": "message",
+              "label": "Show an 'ended' message"
+            },
+            {
+              "value": "hide",
+              "label": "Hide this block"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "ended_message",
+          "label": "Ended message",
+          "default": "This offer has ended. Thanks for stopping by!"
+        },
+        {
+          "type": "text",
+          "id": "ended_button_label",
+          "label": "Ended button label",
+          "default": "Shop all products"
+        },
+        {
+          "type": "url",
+          "id": "ended_button_link",
+          "label": "Ended button link"
+        },
+        {
+          "type": "header",
+          "content": "Style"
+        },
+        {
+          "type": "color",
+          "id": "box_color",
+          "label": "Number box",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "box_text_color",
+          "label": "Number box text",
+          "default": "#ffffff"
         }
       ]
     }

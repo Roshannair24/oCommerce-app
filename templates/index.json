@@ -17,34 +17,44 @@
           "settings": {
             "button_label": "SHOP THE COLLECTION",
             "button_link": "shopify://collections/all",
-            "button_bg_color":"#B3FFF9",
-            "button_text_color":"#011F13"
+            "button_bg_color": "#B3FFF9",
+            "button_text_color": "#011F13"
           }
         }
       },
       "block_order": ["cta"],
       "settings": {
         "background_image": "shopify://shop_images/75f75bc7f1d0ffb86ffcd889637cde77b8d6f5f6_1.png",
-        "foreground_image":"shopify://shop_images/Text_Frame.png"
+        "foreground_image": "shopify://shop_images/Text_Frame.png"
       }
     },
-  "timer_mail_multicolumn": {
+    "timer_mail_multicolumn": {
       "type": "multicolumn",
       "blocks": {
-        "col_1": { "type": "countdown-timer-v1", "settings": { "heading": "New Drop coming soon" } },
-        "col_2": { "type": "column", "settings": { "title": "Easy returns" } }
+        "col_1": {
+          "type": "countdown-timer-v1",
+          "settings": { "heading": "New Drop coming soon" }
+        },
+        "col_2": {
+          "type": "notify-card",
+          "settings": {
+            "caption": "Be the first to know",
+            "heading": "Get notified",
+            "button_label": "Get notified"
+          }
+        }
       },
       "block_order": ["col_1", "col_2"],
-      "settings": { "columns_desktop": 2,
-    
-       "title":"",
-      "button_label": ""
-    },
-   
+      "settings": {
+        "columns_desktop": 2,
+
+        "title": "",
+        "button_label": ""
+      }
     },
     "image_banner": {
       "type": "image-banner",
-       "disabled": true,
+      "disabled": true,
       "blocks": {
         "heading": {
           "type": "heading",
@@ -65,10 +75,7 @@
           }
         }
       },
-      "block_order": [
-        "heading",
-        "button"
-      ],
+      "block_order": ["heading", "button"],
       "settings": {
         "image_overlay_opacity": 40,
         "image_height": "large",
@@ -83,7 +90,7 @@
       }
     },
     "featured_collection": {
-       "disabled": true,
+      "disabled": true,
       "type": "featured-collection",
       "settings": {
         "title": "Featured products",

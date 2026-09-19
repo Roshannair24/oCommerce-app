@@ -80,6 +80,10 @@
               <div class="multicolumn-card content-container">
                 {% render 'countdown-timer', block: block, section_id: section.id %}
               </div>
+            {%- elsif block.type == 'notify-card' -%}
+              <div class="multicolumn-card">
+                {% render 'notify-card', block: block %}
+              </div>
             {%- else -%}
             <div class="multicolumn-card content-container">
               {%- if block.settings.image != blank -%}
@@ -558,7 +562,12 @@
           "label": "Heading",
           "default": "Sale ends in"
         },
-      
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Don't miss out on our biggest offer."
+        },
         {
           "type": "text",
           "id": "label_days",
@@ -634,6 +643,55 @@
           "type": "color",
           "id": "box_text_color",
           "label": "Number box text",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "notify-card",
+      "name": "Email signup",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Get notified"
+        },
+        {
+          "type": "text",
+          "id": "email_placeholder",
+          "label": "Email placeholder",
+          "default": "Enter your email"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Get notified"
+        },
+        {
+          "type": "text",
+          "id": "customer_tags",
+          "label": "Customer tags",
+          "default": "newsletter, get-notified",
+          "info": "Comma-separated. Added to the customer in Shopify admin."
+        },
+        {
+          "type": "text",
+          "id": "success_message",
+          "label": "Success message",
+          "default": "Thanks for subscribing!"
+        },
+        {
+          "type": "color",
+          "id": "button_bg",
+          "label": "Button background",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button text",
           "default": "#ffffff"
         }
       ]

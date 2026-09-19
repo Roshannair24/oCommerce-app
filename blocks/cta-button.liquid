@@ -1,0 +1,52 @@
+{%- if block.settings.button_label != blank -%}
+  <a
+    href="{{ block.settings.button_link | default: '#' }}"
+    class="cta-button"
+    style="
+      {%- if block.settings.button_bg_color != blank -%}
+        --button-bg: {{ block.settings.button_bg_color }};
+      {%- endif -%}
+      {%- if block.settings.button_text_color != blank -%}
+        --button-text: {{ block.settings.button_text_color }};
+      {%- endif -%}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.button_label }}
+  </a>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "CTA Button",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}

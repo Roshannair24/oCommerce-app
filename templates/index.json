@@ -9,6 +9,25 @@
  */
 {
   "sections": {
+    "hero_cover": {
+      "type": "hero-cover",
+      "blocks": {
+        "cta": {
+          "type": "cta-button",
+          "settings": {
+            "button_label": "SHOP THE COLLECTION",
+            "button_link": "shopify://collections/all",
+            "button_bg_color":"#B3FFF9",
+            "button_text_color":"#011F13"
+          }
+        }
+      },
+      "block_order": ["cta"],
+      "settings": {
+        "background_image": "shopify://shop_images/75f75bc7f1d0ffb86ffcd889637cde77b8d6f5f6_1.png",
+        "foreground_image":"shopify://shop_images/Text_Frame.png",
+      }
+    },
     "image_banner": {
       "type": "image-banner",
       "blocks": {
@@ -78,6 +97,7 @@
     }
   },
   "order": [
+    "hero_cover",
     "image_banner",
     "featured_collection"
   ]

@@ -169,7 +169,9 @@
                       style="--animation-order: {{ forloop.index }};"
                     {% endif %}
                   >
-                    {% render 'card-product',
+{% render 'product-card-v2',      card_product: product %}
+
+                  {% render 'card-product',
                       card_product: product,
                       media_aspect_ratio: section.settings.image_ratio,
                       image_shape: section.settings.image_shape,
@@ -181,7 +183,7 @@
                       quick_add: section.settings.quick_add,
                       section_id: section.id,
                       product_view_context: 'collection'
-                    %}
+                    %} 
                   </li>
                   {%- assign skip_card_product_styles = true -%}
                 {%- endfor -%}

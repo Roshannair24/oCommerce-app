@@ -1,0 +1,99 @@
+{%- if card_product != blank -%}
+  {%- liquid
+    assign product = card_product
+    assign max_sw = max_swatches | default: 4
+    assign sizes_attr = sizes | default: '(min-width: 990px) 20vw, 50vw'
+
+    assign img_loading = 'lazy'
+    if lazy == false
+      assign img_loading = 'eager'
+    endif
+
+    assign show_v = true
+    if show_vendor == false
+      assign show_v = false
+    endif
+    assign init_variant = product.selected_or_first_available_variant
+    assign product_url = product.url
+    assign img = init_variant.featured_image | default: product.featured_image
+    assign img_alt = img.alt | default: product.title
+
+    # ---- tags -> badges ----
+    assign is_clearance = false
+    assign is_final_sale = false
+    for t in product.tags
+      assign tl = t | downcase | replace: ' ', '-'
+      if tl == 'clearance'
+        assign is_clearance = true
+      elsif tl == 'final-sale' or tl == 'finalsale'
+        assign is_final_sale = true
+      endif
+    endfor
+  -%}
+
+  {%- if load_assets != false -%}
+    {{ 'product-card-v2.css' | asset_url | stylesheet_tag }}
+    {% comment %} <script src="{{ 'product-card-v2.js' | asset_url }}" defer="defer"></script> {% endcomment %}
+  {%- endif -%}
+
+  <product-card-v2
+    class="pc{% unless init_variant.available %} is-soldout{% endunless %}" style="background-color: yellow;"
+  >
+    <div class="pc__media">
+      {%- if img -%}
+        <img
+          class="pc__img"
+          src="{{ img | image_url: width: 428 }}"
+          srcset="
+            {{ img | image_url: width: 214 }} 214w,
+            {{ img | image_url: width: 320 }} 320w,
+            {{ img | image_url: width: 428 }} 428w,
+            {{ img | image_url: width: 640 }} 640w
+          "
+          sizes="{{ sizes_attr | default: '(min-width: 990px) 25vw, 50vw' }}"
+          alt="{{ img_alt | escape }}"
+          width="{{ img.width }}"
+          height="{{ img.height }}"
+          {% if img_loading == 'lazy' %}
+            loading="lazy"
+          {% endif %}
+        >
+      {%- else -%}
+        <span class="pc__placeholder" data-pc-placeholder>
+          {{ 'product-1' | placeholder_svg_tag: 'pc__placeholder-svg' }}
+        </span>
+      {%- endif -%}
+    </div>
+
+    <div class="pc__info">
+      <div class="pc__badges">
+        {%- if is_clearance -%}
+          <span class="pc__badge pc__badge--clearance">Clearance</span>
+        {%- endif -%}
+        {%- if is_final_sale -%}
+          <span class="pc__badge pc__badge--final">Final Sale</span>
+        {%- endif -%}
+        <span
+          class="pc__badge pc__badge--soldout"
+          data-pc-soldout
+          {% if init_variant.available %}
+            hidden
+          {% endif %}
+          >Sold out</span
+        >
+      </div>
+
+      <h3 class="pc__title">
+        <a href="{{product_url}}?variant={{ init_variant.id }}" data-pc-link>{{ product.title | escape }}</a>
+      </h3>
+      {%- if show_v and product.vendor != blank -%}
+        <p class="pc__vendor">{{ product.vendor | escape }}</p>
+      {%- endif -%}
+      <p class="pc__price" data-pc-price>
+        <span class="pc__price-now" data-pc-price-now>
+          {{- init_variant.price | money -}}
+        </span>
+      </p>
+    </div>
+  </product-card-v2>
+{%- endif -%}

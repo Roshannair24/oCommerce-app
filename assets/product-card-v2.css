@@ -128,6 +128,20 @@
 
 
 
+
+
+
+
+
+
+.pc__swatches { position: absolute; left: 8px; bottom: 8px; display: flex; gap: 6px; }
+.pc__swatch { width: 18px; height: 18px; padding: 0; border-radius: 50%; border: 1px solid #0003; cursor: pointer; }
+.pc__swatch.is-selected { outline: 2px solid #000; outline-offset: 2px; }
+.pc__add { position: absolute; right: 8px; bottom: 8px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #000; color: #fff; cursor: pointer; }
+
+
+
+
 /* ---------- REMOVE LATER ---------- */
 product-card-v2 {
   display: block;

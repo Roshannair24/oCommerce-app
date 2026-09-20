@@ -1,21 +1,57 @@
+{%- comment -%}
+  Reusable product card (v2) with colour swatches, badges and quick add.
+  Safe to render from any grid (collection, search, featured collection, recommendations).
+
+  Accepts the same parameters as the theme's `card-product` snippet, so grids can swap between them:
+    card_product          (required) product object
+    media_aspect_ratio    'adapt' | 'portrait' | 'square'          (default: adapt)
+    show_vendor           boolean                                   (default: true)
+    lazy_load             boolean, false = eager-load the image     (default: true)
+    skip_styles           boolean, true = don't re-emit CSS/JS      (default: false)
+    quick_add             'none' | 'standard' | 'bulk'              (any value but 'none' shows the add button)
+    section_id            string                                    (optional)
+    sizes                 img sizes attribute override              (optional)
+    max_swatches          number of colour swatches shown           (default: 4)
+  Accepted for compatibility but not used by this card: image_shape, show_secondary_image, show_rating, product_view_context.
+
+  Legacy aliases still work: lazy (= lazy_load), show_quick_add (boolean), load_assets (= not skip_styles).
+{%- endcomment -%}
+
 {%- if card_product != blank -%}
   {%- liquid
     assign product = card_product
     assign max_sw = max_swatches | default: 4
-    assign sizes_attr = sizes | default: '(min-width: 990px) 20vw, 50vw'
+    assign sizes_attr = sizes | default: '(min-width: 990px) 25vw, 50vw'
 
+    # ---- option flags ----
     assign show_v = true
     if show_vendor == false
       assign show_v = false
     endif
+
     assign show_qa = true
-    if show_quick_add == false
+    if show_quick_add == false or quick_add == 'none'
       assign show_qa = false
     endif
+
     assign img_loading = 'lazy'
-    if lazy == false
+    if lazy_load == false or lazy == false
       assign img_loading = 'eager'
     endif
+
+    assign emit_assets = true
+    if skip_styles == true or load_assets == false
+      assign emit_assets = false
+    endif
+
+    # ---- media ratio ----
+    assign media_ratio = null
+    case media_aspect_ratio
+      when 'portrait'
+        assign media_ratio = '2 / 3'
+      when 'square'
+        assign media_ratio = '1 / 1'
+    endcase
 
     # ---- find the colour option ----
     assign color_option = null
@@ -93,16 +129,18 @@
     endif
   -%}
 
-  {%- if load_assets != false -%}
+  {%- if emit_assets -%}
     {{ 'product-card-v2.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'product-card-v2.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
 
-  <product-card-v2
-    class="pc{% unless init_variant.available %} is-soldout{% endunless %}"
-    style="background-color: yellow;"
-  >
-    <div class="pc__media">
+  <product-card-v2 class="pc{% unless init_variant.available %} is-soldout{% endunless %}">
+    <div
+      class="pc__media"
+      {% if media_ratio %}
+        style="--pc-ratio: {{ media_ratio }};"
+      {% endif %}
+    >
       {%- if img -%}
         <img
           class="pc__img"
@@ -113,13 +151,11 @@
             {{ img | image_url: width: 428 }} 428w,
             {{ img | image_url: width: 640 }} 640w
           "
-          sizes="{{ sizes_attr | default: '(min-width: 990px) 25vw, 50vw' }}"
+          sizes="{{ sizes_attr }}"
           alt="{{ img_alt | escape }}"
           width="{{ img.width }}"
           height="{{ img.height }}"
-          {% if img_loading == 'lazy' %}
-            loading="lazy"
-          {% endif %}
+          loading="{{ img_loading }}"
         >
       {%- else -%}
         <span class="pc__placeholder" data-pc-placeholder>
@@ -127,28 +163,34 @@
         </span>
       {%- endif -%}
 
+      {%- if is_final_sale -%}
+        <span class="pc__badge pc__badge--final pc__badge--corner">Final Sale</span>
+      {%- endif -%}
+
       {%- if color_option -%}
         <div class="pc__swatches">
           {%- for value in color_option.values limit: shown -%}
             {%- assign vname = value.name | default: value -%}
+            {%- assign sv = null -%}
             {%- for v in product.variants -%}
               {%- if v.options[cidx] == vname -%}
                 {%- assign sv = v -%}
                 {%- break -%}
               {%- endif -%}
             {%- endfor -%}
-            <button
-              type="button"
-              class="pc__swatch{% if forloop.index0 == init_idx %} is-selected{% endif %}"
-
-              data-pc-swatch
-              data-variant-id="{{ sv.id }}"
-              data-image="{{ sv.featured_image | image_url: width: 428 }}"
-              data-price="{{ sv.price | money }}"
-              data-url="{{ product_url }}?variant={{ sv.id }}"
-              aria-label="{{ vname | escape }}"
-              style="background: {{ value.swatch.color | default: vname }}"
-            ></button>
+            {%- if sv -%}
+              <button
+                type="button"
+                class="pc__swatch{% if forloop.index0 == init_idx %} is-selected{% endif %}"
+                data-pc-swatch
+                data-variant-id="{{ sv.id }}"
+                data-image="{{ sv.featured_image | image_url: width: 428 }}"
+                data-price="{{ sv.price | money }}"
+                data-url="{{ product_url }}?variant={{ sv.id }}"
+                aria-label="{{ vname | escape }}"
+                style="background: {{ value.swatch.color | default: vname }}"
+              ></button>
+            {%- endif -%}
           {%- endfor -%}
           {%- if hidden_count > 0 -%}
             <a
@@ -163,6 +205,7 @@
           {%- endif -%}
         </div>
       {%- endif -%}
+
       {%- if show_qa -%}
         <button
           type="button"
@@ -182,14 +225,11 @@
 
     <div
       class="pc__info"
-      style="padding: 0 10px 10px;"
+      style="padding: 0 10px 10px 10px;"
     >
       <div class="pc__badges">
         {%- if is_clearance -%}
           <span class="pc__badge pc__badge--clearance">Clearance</span>
-        {%- endif -%}
-        {%- if is_final_sale -%}
-          <span class="pc__badge pc__badge--final">Final Sale</span>
         {%- endif -%}
         <span
           class="pc__badge pc__badge--soldout"
@@ -202,7 +242,7 @@
       </div>
 
       <h3 class="pc__title">
-        <a href="{{product_url}}?variant={{ init_variant.id }}" data-pc-link>{{ product.title | escape }}</a>
+        <a href="{{ product_url }}?variant={{ init_variant.id }}" data-pc-link>{{ product.title | escape }}</a>
       </h3>
       {%- if show_v and product.vendor != blank -%}
         <p class="pc__vendor">{{ product.vendor | escape }}</p>

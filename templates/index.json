@@ -44,8 +44,11 @@
           "settings": {
             "caption": "Be the first to know",
             "heading": "Get notified",
-            "button_label": "Get notified",
-            "background_image": "shopify://shop_images/sneak-peak.png"
+            "button_label": "NOTIFY ME",
+            "background_image": "shopify://shop_images/sneak-peak.png",
+            "heading_color": "#421802",
+            "input_color": "#421802",
+            "button_text_color": "#421802"
           }
         }
       },

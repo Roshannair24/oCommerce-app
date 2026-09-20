@@ -79,8 +79,9 @@
             {%- if block.type == 'countdown-timer-v1' -%}
               <div
                 class="multicolumn-card content-container"
-                {% if block.settings.height > 0 or block.settings.background_image != blank %}
+                {% if block.settings.height > 0 or block.settings.background_image != blank or block.settings.block_bg != blank %}
                   style="
+                    {%- if block.settings.block_bg != blank -%}background-color: {{ block.settings.block_bg }};{%- endif -%}
                     {%- if block.settings.height > 0 -%}min-height: {{ block.settings.height }}px; display: flex; flex-direction: column; justify-content: center;{%- endif -%}
                     {%- if block.settings.background_image != blank -%}background-image: url('{{ block.settings.background_image | image_url: width: 2000 }}'); background-size: cover; background-position: center; background-repeat: no-repeat;{%- endif -%}
                   "
@@ -663,14 +664,60 @@
         {
           "type": "color",
           "id": "box_color",
-          "label": "Number box",
+          "label": "Digit background",
           "default": "#111111"
         },
         {
           "type": "color",
           "id": "box_text_color",
-          "label": "Number box text",
+          "label": "Digit text",
           "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "block_bg",
+          "label": "Tile background",
+          "info": "Background of the whole countdown block. Leave empty for none. Shows behind the background image."
+        },
+        {
+          "type": "header",
+          "content": "Heading font"
+        },
+        {
+          "type": "font_picker",
+          "id": "heading_font",
+          "label": "Heading font",
+          "default": "assistant_n4"
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "label": "Heading size",
+          "min": 12,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "default": 28
+        },
+        {
+          "type": "header",
+          "content": "Subheading font"
+        },
+        {
+          "type": "font_picker",
+          "id": "subheading_font",
+          "label": "Subheading font",
+          "default": "assistant_n4"
+        },
+        {
+          "type": "range",
+          "id": "subheading_size",
+          "label": "Subheading size",
+          "min": 10,
+          "max": 48,
+          "step": 1,
+          "unit": "px",
+          "default": 16
         }
       ]
     },

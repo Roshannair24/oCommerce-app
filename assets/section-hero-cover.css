@@ -130,3 +130,27 @@
 .hero-cover__foreground--right {
   right: 2rem;
 }
+
+/* Reviews tab: vertical tab anchored to the right edge of the hero */
+.hero-cover__reviews-tab {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  padding: 1.25rem 0.75rem;
+  background-color: #fff;
+  color: #000;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 6px 0 0 6px;
+  box-shadow: -2px 0 8px rgb(0 0 0 / 0.15);
+  transition: opacity 0.2s ease;
+}
+
+.hero-cover__reviews-tab:hover {
+  opacity: 0.85;
+}

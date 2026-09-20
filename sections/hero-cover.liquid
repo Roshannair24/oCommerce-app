@@ -52,6 +52,12 @@
       {%- content_for 'blocks' -%}
     </div>
   </div>
+
+  {%- if section.settings.show_reviews_tab -%}
+    <a class="hero-cover__reviews-tab" href="{{ section.settings.reviews_tab_link | default: '#reviews' }}">
+      {{- section.settings.reviews_tab_label | default: 'Reviews' -}}
+    </a>
+  {%- endif -%}
 </div>
 
 {% schema %}
@@ -119,6 +125,15 @@
       "step": 5,
       "unit": "%",
       "default": 100
+    },
+    { "type": "header", "content": "Reviews tab" },
+    { "type": "checkbox", "id": "show_reviews_tab", "label": "Show reviews tab", "default": true },
+    { "type": "text", "id": "reviews_tab_label", "label": "Reviews tab label", "default": "Reviews" },
+    {
+      "type": "url",
+      "id": "reviews_tab_link",
+      "label": "Reviews tab link",
+      "info": "Leave empty to link to #reviews on this page."
     }
   ],
   "blocks": [

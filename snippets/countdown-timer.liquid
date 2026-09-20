@@ -13,6 +13,7 @@
   style="
     --cdt-box: {{ s.box_color }};
     --cdt-box-text: {{ s.box_text_color }};
+    --cdt-sep: {{ s.separator_color | default: '#ffffff' }};
     --cdt-h-size: {{ s.heading_size | default: 28 }}px;
     --cdt-sub-size: {{ s.subheading_size | default: 16 }}px;
     --cdt-label-size: {{ s.label_size | default: 13 }}px;
@@ -86,7 +87,7 @@
     font-variant-numeric: tabular-nums;
   }
   #Countdown-{{ bid }} .cdt__sep {
-    display: flex; align-items: center; height: var(--cdt-tile-h);
+    display: flex; align-items: center; height: var(--cdt-tile-h); color: var(--cdt-sep);
     font-size: clamp(1.1rem, 3.2vw, 1.9rem); font-weight: 700; line-height: 1;
   }
   #Countdown-{{ bid }} .cdt__label {

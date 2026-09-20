@@ -79,7 +79,10 @@
             {%- if block.type == 'countdown-timer-v1' -%}
               <div
                 class="multicolumn-card content-container"
-                {% if block.settings.height > 0 or block.settings.background_image != blank or block.settings.block_bg != blank %}
+                {% if block.settings.height > 0
+                  or block.settings.background_image != blank
+                  or block.settings.block_bg != blank
+                %}
                   style="
                     {%- if block.settings.block_bg != blank -%}background-color: {{ block.settings.block_bg }};{%- endif -%}
                     {%- if block.settings.height > 0 -%}min-height: {{ block.settings.height }}px; display: flex; flex-direction: column; justify-content: center;{%- endif -%}
@@ -675,9 +678,15 @@
         },
         {
           "type": "color",
+          "id": "separator_color",
+          "label": "Colon color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
           "id": "block_bg",
           "label": "Tile background",
-          "info": "Background of the whole countdown block. Leave empty for none. Shows behind the background image.",
+          "info": "Background of the whole countdown block. Leave empty for none. Shows behind the background image."
         },
         {
           "type": "header",

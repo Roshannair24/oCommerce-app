@@ -85,7 +85,7 @@
                 %}
                   style="
                     {%- if block.settings.block_bg != blank -%}background-color: {{ block.settings.block_bg }};{%- endif -%}
-                    {%- if block.settings.height > 0 -%}min-height: {{ block.settings.height }}px; display: flex; flex-direction: column; justify-content: center;{%- endif -%}
+                    {%- if block.settings.height > 0 -%}min-height: {{ block.settings.height }}px; display: flex; flex-direction: column; justify-content: {% case block.settings.vertical_align %}{% when 'top' %}flex-start{% when 'bottom' %}flex-end{% else %}center{% endcase %};{%- endif -%}
                     {%- if block.settings.background_image != blank -%}background-image: url('{{ block.settings.background_image | image_url: width: 2000 }}'); background-size: cover; background-position: center; background-repeat: no-repeat;{%- endif -%}
                   "
                 {% endif %}
@@ -476,6 +476,18 @@
           "step": 10,
           "unit": "px",
           "default": 0
+        },
+        {
+          "type": "select",
+          "id": "vertical_align",
+          "label": "Vertical alignment",
+          "info": "Position of the heading, subheading and timer inside the block. Needs a Block height above 0 to have any effect.",
+          "default": "center",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "center", "label": "Center" },
+            { "value": "bottom", "label": "Bottom" }
+          ]
         },
         {
           "type": "image_picker",

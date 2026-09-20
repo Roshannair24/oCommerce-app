@@ -82,9 +82,11 @@
                 {% if block.settings.height > 0
                   or block.settings.background_image != blank
                   or block.settings.block_bg != blank
+                  or block.settings.padding_top != blank
                 %}
                   style="
                     {%- if block.settings.block_bg != blank -%}background-color: {{ block.settings.block_bg }};{%- endif -%}
+                    {%- if block.settings.padding_top != blank -%}padding: {{ block.settings.padding_top }}px {{ block.settings.padding_right }}px {{ block.settings.padding_bottom }}px {{ block.settings.padding_left }}px;{%- endif -%}
                     {%- if block.settings.height > 0 -%}min-height: {{ block.settings.height }}px; display: flex; flex-direction: column; justify-content: {% case block.settings.vertical_align %}{% when 'top' %}flex-start{% when 'bottom' %}flex-end{% else %}center{% endcase %};{%- endif -%}
                     {%- if block.settings.background_image != blank -%}background-image: url('{{ block.settings.background_image | image_url: width: 2000 }}'); background-size: cover; background-position: center; background-repeat: no-repeat;{%- endif -%}
                   "
@@ -699,6 +701,50 @@
           "id": "block_bg",
           "label": "Tile background",
           "info": "Background of the whole countdown block. Leave empty for none. Shows behind the background image."
+        },
+        {
+          "type": "header",
+          "content": "Block padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Top",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_right",
+          "label": "Right",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Bottom",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_left",
+          "label": "Left",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
         },
         {
           "type": "header",

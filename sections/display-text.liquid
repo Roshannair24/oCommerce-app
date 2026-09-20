@@ -1,0 +1,183 @@
+{%- comment -%}
+  Display text: real text with an image (or video) showing through the letters.
+  Editable: text, font, font size, fill image, fill video, height.
+
+  Image: CSS background-clip:text on real HTML text (selectable, translatable).
+  Video: <video> behind a solid text layer + mix-blend-mode (white bg: black letters + screen;
+  black bg: white letters + multiply).
+  Fallbacks: plain theme-coloured text if the effect/image is unsupported or fails, and in
+  forced-colors and print. The text is never invisible.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign sid = section.id
+
+  assign mode = 'plain'
+  if s.video != blank
+    assign mode = 'video'
+  elsif s.fill_image != blank
+    assign mode = 'image'
+  endif
+
+  assign focal = s.fill_image.presentation.focal_point | default: '50% 50%'
+
+  if s.video_background == 'black'
+    assign vbg = '#000000'
+    assign vtext = '#ffffff'
+    assign vblend = 'multiply'
+  else
+    assign vbg = '#ffffff'
+    assign vtext = '#000000'
+    assign vblend = 'screen'
+  endif
+-%}
+
+{%- style -%}
+  {%- if s.font != blank -%}
+    {{ s.font | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #DisplayText-{{ sid }} {
+    padding: 24px 0;
+  }
+  #DisplayText-{{ sid }} .dt__text {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: {{ s.height }}px;
+    line-height: 0.9;
+    font-family: {% if s.font != blank %}{{ s.font.family }}, {{ s.font.fallback_families }}{% else %}inherit{% endif %};
+    {%- if s.font != blank %}
+    font-weight: {{ s.font.weight }};
+    font-style: {{ s.font.style }};
+    {%- endif %}
+    font-size: clamp({{ s.font_size | times: 0.35 | round: 0 }}px, 15vw, {{ s.font_size }}px);
+    overflow-wrap: anywhere;
+    /* Fallback: plain, solid text in the theme's foreground colour (Dawn-style var, else near-black). */
+    --dt-fallback: rgb(var(--color-foreground, 17, 17, 17));
+    color: var(--dt-fallback);
+  }
+
+  {%- if mode == 'image' %}
+  #DisplayText-{{ sid }} .dt__text {
+    --dt-img: url('{{ s.fill_image | image_url: width: 1200 }}');
+  }
+  @media screen and (min-width: 750px) {
+    #DisplayText-{{ sid }} .dt__text {
+      --dt-img: url('{{ s.fill_image | image_url: width: 2400 }}');
+    }
+  }
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    #DisplayText-{{ sid }} .dt__text {
+      /* Solid colour is the last layer, so letters stay visible if the image fails to load. */
+      background: var(--dt-img) {{ focal }} / cover no-repeat, var(--dt-fallback);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+  }
+  {%- endif %}
+
+  {%- if mode == 'video' %}
+  #DisplayText-{{ sid }} { background: {{ vbg }}; }
+  #DisplayText-{{ sid }} .dt__wrap { position: relative; isolation: isolate; overflow: hidden; }
+  #DisplayText-{{ sid }} .dt__media { position: absolute; inset: 0; z-index: 0; }
+  #DisplayText-{{ sid }} .dt__media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #DisplayText-{{ sid }} .dt__text {
+    position: relative; z-index: 1;
+    background: {{ vbg }}; color: {{ vtext }}; mix-blend-mode: {{ vblend }};
+  }
+  @supports not (mix-blend-mode: multiply) {
+    #DisplayText-{{ sid }} { background: none; }
+    #DisplayText-{{ sid }} .dt__media { display: none; }
+    #DisplayText-{{ sid }} .dt__text { background: none; color: var(--dt-fallback); mix-blend-mode: normal; }
+  }
+  {%- endif %}
+
+  @media (forced-colors: active) {
+    #DisplayText-{{ sid }} { background: none !important; }
+    #DisplayText-{{ sid }} .dt__text {
+      background: none !important;
+      -webkit-text-fill-color: currentColor !important;
+      color: CanvasText !important;
+      mix-blend-mode: normal !important;
+    }
+    #DisplayText-{{ sid }} .dt__media { display: none !important; }
+  }
+  @media print {
+    #DisplayText-{{ sid }} { background: none !important; }
+    #DisplayText-{{ sid }} .dt__text {
+      background: none !important;
+      -webkit-text-fill-color: currentColor !important;
+      color: #000 !important;
+      mix-blend-mode: normal !important;
+    }
+    #DisplayText-{{ sid }} .dt__media { display: none !important; }
+  }
+{%- endstyle -%}
+
+<div id="DisplayText-{{ sid }}" class="dt dt--{{ mode }}">
+  <div class="page-width">
+    <div class="dt__wrap">
+      {%- if mode == 'video' -%}
+        <div class="dt__media" aria-hidden="true">
+          {{
+            s.video
+            | video_tag:
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true,
+              image_size: '1200x'
+          }}
+        </div>
+      {%- endif -%}
+
+      {%- if s.text != blank -%}
+        <h2 class="dt__text">{{ s.text | escape | newline_to_br }}</h2>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Display text",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "info": "Press Enter for a line break.",
+      "default": "SUMMER\nDROP"
+    },
+    { "type": "font_picker", "id": "font", "label": "Font", "default": "assistant_n7", "info": "Heavy weights show the fill best." },
+    { "type": "range", "id": "font_size", "label": "Font size", "min": 40, "max": 400, "step": 4, "unit": "px", "default": 200 },
+    { "type": "image_picker", "id": "fill_image", "label": "Text image" },
+    { "type": "video", "id": "video", "label": "Text video", "info": "If set, used instead of the image." },
+    {
+      "type": "select",
+      "id": "video_background",
+      "label": "Video background",
+      "default": "white",
+      "info": "Only used with a video. Solid white or solid black.",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "black", "label": "Black" }
+      ]
+    },
+    { "type": "range", "id": "height", "label": "Height", "min": 0, "max": 800, "step": 20, "unit": "px", "default": 0, "info": "A taller area shows more of the image or video." }
+  ],
+  "presets": [
+    { "name": "Display text" }
+  ]
+}
+{% endschema %}

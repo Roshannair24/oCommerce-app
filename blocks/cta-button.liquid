@@ -1,5 +1,21 @@
 {%- if block.settings.button_label != blank -%}
+  {%- assign btn_font = block.settings.button_font -%}
+  <style>
+    {%- if btn_font != blank -%}
+      {{ btn_font | font_face: font_display: 'swap' }}
+    {%- endif -%}
+    #cta-{{ block.id }},
+    #cta-{{ block.id }} * {
+      {%- if btn_font != blank %}
+      font-family: {{ btn_font.family }}, {{ btn_font.fallback_families }} !important;
+      font-weight: {{ btn_font.weight }} !important;
+      font-style: {{ btn_font.style }} !important;
+      {%- endif %}
+      font-size: {{ block.settings.button_font_size | default: 16 }}px !important;
+    }
+  </style>
   <a
+    id="cta-{{ block.id }}"
     href="{{ block.settings.button_link | default: '#' }}"
     class="cta-button"
     style="
@@ -30,6 +46,26 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button label font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button label font size",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16
     },
     {
       "type": "header",

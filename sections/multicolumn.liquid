@@ -641,22 +641,7 @@
           "type": "header",
           "content": "When the timer reaches zero"
         },
-        {
-          "type": "select",
-          "id": "on_end",
-          "label": "Action at zero",
-          "default": "message",
-          "options": [
-            {
-              "value": "message",
-              "label": "Show an 'ended' message"
-            },
-            {
-              "value": "hide",
-              "label": "Hide this block"
-            }
-          ]
-        },
+
         {
           "type": "text",
           "id": "ended_message",
@@ -664,16 +649,28 @@
           "default": "This offer has ended. Thanks for stopping by!"
         },
         {
-          "type": "text",
-          "id": "ended_button_label",
-          "label": "Ended button label",
-          "default": "Shop all products"
+          "type": "font_picker",
+          "id": "ended_font",
+          "label": "Ended message font",
+          "default": "assistant_n4"
         },
         {
-          "type": "url",
-          "id": "ended_button_link",
-          "label": "Ended button link"
+          "type": "range",
+          "id": "ended_size",
+          "label": "Ended message size",
+          "min": 10,
+          "max": 72,
+          "step": 1,
+          "unit": "px",
+          "default": 18
         },
+        {
+          "type": "color",
+          "id": "ended_color",
+          "label": "Ended message color",
+          "default": "#ffffff"
+        },
+
         {
           "type": "header",
           "content": "Style"

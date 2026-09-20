@@ -17,6 +17,7 @@
     --cdt-h-size: {{ s.heading_size | default: 28 }}px;
     --cdt-sub-size: {{ s.subheading_size | default: 16 }}px;
     --cdt-label-size: {{ s.label_size | default: 13 }}px;
+    --cdt-ended-size: {{ s.ended_size | default: 18 }}px;
   "
   {{ block.shopify_attributes }}
   hidden
@@ -51,7 +52,8 @@
 <style>
   {%- if s.heading_font != blank -%}{{ s.heading_font | font_face: font_display: 'swap' }}{%- endif -%}
   {%- if s.subheading_font != blank -%}{{ s.subheading_font | font_face: font_display: 'swap' }}{%- endif -%}
-  {%- if s.label_font != blank -%}{{ s.label_font | font_face: font_display: 'swap' }}{%- endif %}
+  {%- if s.label_font != blank -%}{{ s.label_font | font_face: font_display: 'swap' }}{%- endif -%}
+  {%- if s.ended_font != blank -%}{{ s.ended_font | font_face: font_display: 'swap' }}{%- endif %}
   #Countdown-{{ bid }} {
     width: 100%; text-align: center;
     display: flex; flex-direction: column; align-items: center; gap: 20px;
@@ -102,7 +104,14 @@
     font-weight: {{ s.label_font.weight }}; font-style: {{ s.label_font.style }};
     {%- endif %}
   }
-  #Countdown-{{ bid }} .cdt__ended-text { margin: 0 0 1em; font-weight: 600; }
+  #Countdown-{{ bid }} .cdt__ended-text {
+    margin: 0 0 1em; font-weight: 600; font-size: var(--cdt-ended-size);
+    {%- if s.ended_color != blank %} color: {{ s.ended_color }};{% endif %}
+    {%- if s.ended_font != blank %}
+    font-family: {{ s.ended_font.family }}, {{ s.ended_font.fallback_families }};
+    font-weight: {{ s.ended_font.weight }}; font-style: {{ s.ended_font.style }};
+    {%- endif %}
+  }
   #Countdown-{{ bid }} .cdt__btn {
     display: inline-block; padding: .8em 1.6em; border-radius: 6px; text-decoration: none;
     background: var(--cdt-box); color: var(--cdt-box-text); font-weight: 600;

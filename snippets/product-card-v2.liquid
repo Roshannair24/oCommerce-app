@@ -136,9 +136,9 @@
 
   <product-card-v2 class="pc{% unless init_variant.available %} is-soldout{% endunless %}">
     <div
-      class="pc__media{% if media_ratio %} pc__media--ratio{% endif %}"
+      class="pc__media"
       {% if media_ratio %}
-        style="--pc-media-ratio: {{ media_ratio }};"
+        style="--pc-ratio: {{ media_ratio }};"
       {% endif %}
     >
       {%- if img -%}
@@ -161,6 +161,10 @@
         <span class="pc__placeholder" data-pc-placeholder>
           {{ 'product-1' | placeholder_svg_tag: 'pc__placeholder-svg' }}
         </span>
+      {%- endif -%}
+
+      {%- if is_final_sale -%}
+        <span class="pc__badge pc__badge--final pc__badge--corner">Final Sale</span>
       {%- endif -%}
 
       {%- if color_option -%}
@@ -219,13 +223,13 @@
       {%- endif -%}
     </div>
 
-    <div class="pc__info">
+    <div
+      class="pc__info"
+      style="padding: 0 10px 10px 10px;"
+    >
       <div class="pc__badges">
         {%- if is_clearance -%}
           <span class="pc__badge pc__badge--clearance">Clearance</span>
-        {%- endif -%}
-        {%- if is_final_sale -%}
-          <span class="pc__badge pc__badge--final">Final Sale</span>
         {%- endif -%}
         <span
           class="pc__badge pc__badge--soldout"
@@ -233,7 +237,8 @@
           {% if init_variant.available %}
             hidden
           {% endif %}
-        >Sold out</span>
+          >Sold out</span
+        >
       </div>
 
       <h3 class="pc__title">

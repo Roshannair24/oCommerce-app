@@ -117,15 +117,15 @@
 
 
     #NotifyCard-{{ bid }} .ncard__heading { margin: 0 0 .6em; }
-    #NotifyCard-{{ bid }} .ncard__field { display: flex; flex-wrap: wrap; gap: 8px; }
+    #NotifyCard-{{ bid }} .ncard__field { display: flex; flex-wrap: wrap; gap: 0; align-items: stretch; }
     #NotifyCard-{{ bid }} .ncard__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     #NotifyCard-{{ bid }} .ncard__input {
       flex: 1 1 200px; min-width: 0; padding: .85em 1em; font: inherit;
-      border: 1px solid currentColor; border-radius: 0px; background: transparent; color: inherit;
+      border: 0; border-bottom: 1px solid currentColor; border-radius: 0px; background: transparent; color: inherit;
     }
     #NotifyCard-{{ bid }} .ncard__btn {
       padding: .85em 1.6em; font: inherit; font-weight: 600; cursor: pointer;
-      background: {{ s.button_bg }}; color: {{ s.button_text_color }}; border: 0; border-radius: 0px;
+      background: {{ s.button_bg }}; color: {{ s.button_text_color }}; border: 0; border-bottom: 1px solid currentColor; border-radius: 0px;
     }
     #NotifyCard-{{ bid }} .ncard__msg { margin: .8em 0 0; }
     #NotifyCard-{{ bid }} .ncard__msg--error { color: #c62828; }

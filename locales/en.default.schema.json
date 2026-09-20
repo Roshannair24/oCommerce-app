@@ -1822,6 +1822,16 @@
           "label": "Product rating",
           "info": "An app is required for product ratings. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types/collection-pages#product-grid-show-product-rating)"
         },
+        "product_card": {
+          "label": "Card style",
+          "info": "Choose which product card snippet renders each product in the grid.",
+          "options__1": {
+            "label": "Theme default"
+          },
+          "options__2": {
+            "label": "Card v2 (color swatches)"
+          }
+        },
         "header__1": {
           "content": "Filtering and sorting"
         },
@@ -3408,3 +3418,4 @@
     }
   }
 }
+

@@ -169,31 +169,36 @@
                       style="--animation-order: {{ forloop.index }};"
                     {% endif %}
                   >
-{% render 'product-card-v2',        card_product: product,
-                      media_aspect_ratio: section.settings.image_ratio,
-                      image_shape: section.settings.image_shape,
-                      show_secondary_image: section.settings.show_secondary_image,
-                      show_vendor: section.settings.show_vendor,
-                      show_rating: section.settings.show_rating,
-                      lazy_load: lazy_load,
-                      skip_styles: skip_card_product_styles,
-                      quick_add: section.settings.quick_add,
-                      section_id: section.id,
-                      product_view_context: 'collection' %}
-
-                 {% render 'card-product',
-                      card_product: product,
-                      media_aspect_ratio: section.settings.image_ratio,
-                      image_shape: section.settings.image_shape,
-                      show_secondary_image: section.settings.show_secondary_image,
-                      show_vendor: section.settings.show_vendor,
-                      show_rating: section.settings.show_rating,
-                      lazy_load: lazy_load,
-                      skip_styles: skip_card_product_styles,
-                      quick_add: section.settings.quick_add,
-                      section_id: section.id,
-                      product_view_context: 'collection'
-                    %} 
+{%- case section.settings.product_card -%}
+                      {%- when 'product-card-v2' -%}
+                        {% render 'product-card-v2',
+                          card_product: product,
+                          media_aspect_ratio: section.settings.image_ratio,
+                          image_shape: section.settings.image_shape,
+                          show_secondary_image: section.settings.show_secondary_image,
+                          show_vendor: section.settings.show_vendor,
+                          show_rating: section.settings.show_rating,
+                          lazy_load: lazy_load,
+                          skip_styles: skip_card_product_styles,
+                          quick_add: section.settings.quick_add,
+                          section_id: section.id,
+                          product_view_context: 'collection'
+                        %}
+                      {%- else -%}
+                        {% render 'card-product',
+                          card_product: product,
+                          media_aspect_ratio: section.settings.image_ratio,
+                          image_shape: section.settings.image_shape,
+                          show_secondary_image: section.settings.show_secondary_image,
+                          show_vendor: section.settings.show_vendor,
+                          show_rating: section.settings.show_rating,
+                          lazy_load: lazy_load,
+                          skip_styles: skip_card_product_styles,
+                          quick_add: section.settings.quick_add,
+                          section_id: section.id,
+                          product_view_context: 'collection'
+                        %}
+                    {%- endcase -%}
                   </li>
                   {%- assign skip_card_product_styles = true -%}
                 {%- endfor -%}
@@ -262,6 +267,23 @@
     {
       "type": "header",
       "content": "t:sections.main-collection-product-grid.settings.header__3.content"
+    },
+    {
+      "type": "select",
+      "id": "product_card",
+      "default": "card-product",
+      "label": "t:sections.main-collection-product-grid.settings.product_card.label",
+      "info": "t:sections.main-collection-product-grid.settings.product_card.info",
+      "options": [
+        {
+          "value": "card-product",
+          "label": "t:sections.main-collection-product-grid.settings.product_card.options__1.label"
+        },
+        {
+          "value": "product-card-v2",
+          "label": "t:sections.main-collection-product-grid.settings.product_card.options__2.label"
+        }
+      ]
     },
     {
       "type": "select",

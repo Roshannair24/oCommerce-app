@@ -33,7 +33,11 @@
       "blocks": {
         "col_1": {
           "type": "countdown-timer-v1",
-          "settings": { "heading": "New Drop coming soon" }
+          "settings": {
+            "heading": "New Drop coming soon",
+            "background_image": "shopify://shop_images/timer-bg-img.png",
+            "height": 400
+          }
         },
         "col_2": {
           "type": "notify-card",

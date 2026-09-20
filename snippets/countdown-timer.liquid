@@ -52,10 +52,13 @@
   {%- if s.heading_font != blank -%}{{ s.heading_font | font_face: font_display: 'swap' }}{%- endif -%}
   {%- if s.subheading_font != blank -%}{{ s.subheading_font | font_face: font_display: 'swap' }}{%- endif -%}
   {%- if s.label_font != blank -%}{{ s.label_font | font_face: font_display: 'swap' }}{%- endif %}
-  #Countdown-{{ bid }} { width: 100%; text-align: center; }
+  #Countdown-{{ bid }} {
+    width: 100%; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
   #Countdown-{{ bid }}[hidden], #Countdown-{{ bid }} [hidden] { display: none !important; }
   #Countdown-{{ bid }} .cdt__heading {
-    margin: 0 0 .4em; line-height: 1.2; font-size: calc(var(--cdt-h-size) * .75);
+    margin: 0; line-height: 1.2; font-size: calc(var(--cdt-h-size) * .75);
     {%- if s.heading_color != blank %} color: {{ s.heading_color }};{% endif %}
     {%- if s.heading_font != blank %}
     font-family: {{ s.heading_font.family }}, {{ s.heading_font.fallback_families }};
@@ -63,7 +66,7 @@
     {%- endif %}
   }
   #Countdown-{{ bid }} .cdt__sub {
-    margin: 0 0 1em; opacity: .85; line-height: 1.3; font-size: calc(var(--cdt-sub-size) * .8);
+    margin: 0; opacity: .85; line-height: 1.3; font-size: calc(var(--cdt-sub-size) * .8);
     {%- if s.subheading_color != blank %} color: {{ s.subheading_color }};{% endif %}
     {%- if s.subheading_font != blank %}
     font-family: {{ s.subheading_font.family }}, {{ s.subheading_font.fallback_families }};
@@ -71,6 +74,7 @@
     {%- endif %}
   }
   @media screen and (min-width: 750px) {
+    #Countdown-{{ bid }} { gap: 50px; }
     #Countdown-{{ bid }} .cdt__heading { font-size: var(--cdt-h-size); }
     #Countdown-{{ bid }} .cdt__sub { font-size: var(--cdt-sub-size); }
     #Countdown-{{ bid }} .cdt__label { font-size: var(--cdt-label-size); }

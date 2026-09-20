@@ -44,7 +44,8 @@
           "settings": {
             "caption": "Be the first to know",
             "heading": "Get notified",
-            "button_label": "Get notified"
+            "button_label": "Get notified",
+            "background_image": "shopify://shop_images/sneak-peak.png"
           }
         }
       },
@@ -64,7 +65,7 @@
         "video": "shopify://files/videos/summer-drop.mp4",
         "font_size": 240,
         "height": 260,
-        "font":"pinyon_script_n4"
+        "font": "pinyon_script_n4"
       }
     },
     "image_banner": {

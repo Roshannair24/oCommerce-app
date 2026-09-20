@@ -11,6 +11,22 @@
 -%}
 
 <div class="ncard" id="NotifyCard-{{ bid }}">
+  {%- if s.background_image != blank or s.caption != blank -%}
+    <div
+      class="ncard__media ncard__media--{{ s.image_ratio | default: 'landscape' }} ncard__media--{{ s.caption_position | default: 'bottom' }}"
+      {% if s.background_image != blank %}
+        role="img" aria-label="{{ s.background_image.alt | default: s.caption | escape }}"
+        style="background-image: url('{{ s.background_image | image_url: width: 1600 }}');"
+      {% endif %}
+    >
+      {%- if s.caption != blank -%}
+        <div class="ncard__overlay">
+          <p class="ncard__caption">{{ s.caption | escape }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
   {%- if s.heading != blank -%}
     <h3 class="ncard__heading">{{ s.heading | escape }}</h3>
   {%- endif -%}
@@ -44,7 +60,8 @@
             {%- if field == 'form' -%}
               {{ form.errors.messages[field] }}
             {%- else -%}
-              {{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}
+              {{ form.errors.translated_fields[field] | capitalize }}
+              {{ form.errors.messages[field] }}
             {%- endif -%}
             {%- unless forloop.last %} {% endunless -%}
           {%- endfor -%}
@@ -55,18 +72,62 @@
 </div>
 
 <style>
-  #NotifyCard-{{ bid }} .ncard__heading { margin: 0 0 .6em; }
-  #NotifyCard-{{ bid }} .ncard__field { display: flex; flex-wrap: wrap; gap: 8px; }
-  #NotifyCard-{{ bid }} .ncard__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  #NotifyCard-{{ bid }} .ncard__input {
-    flex: 1 1 200px; min-width: 0; padding: .85em 1em; font: inherit;
-    border: 1px solid currentColor; border-radius: 6px; background: transparent; color: inherit;
+   #NotifyCard-{{ bid }} {
+    box-sizing: border-box;
+      {%- if s.card_bg != blank %}background-color: {{ s.card_bg }};{% endif %}
+    padding: {{ s.padding_top | default: 0 }}px {{ s.padding_right | default: 0 }}px {{ s.padding_bottom | default: 0 }}px {{ s.padding_left | default: 0 }}px;
   }
-  #NotifyCard-{{ bid }} .ncard__btn {
-    padding: .85em 1.6em; font: inherit; font-weight: 600; cursor: pointer;
-    background: {{ s.button_bg }}; color: {{ s.button_text_color }}; border: 0; border-radius: 6px;
-  }
-  #NotifyCard-{{ bid }} .ncard__msg { margin: .8em 0 0; }
-  #NotifyCard-{{ bid }} .ncard__msg--error { color: #c62828; }
-  #NotifyCard-{{ bid }} .ncard__msg--success { color: #1b7f3b; font-weight: 600; margin: 0; }
+
+
+
+
+
+
+
+
+
+
+
+
+   #NotifyCard-{{ bid }} .ncard__media {
+      position: relative; display: flex; flex-direction: column; width: 100%; margin: 0 0 1em;
+      background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 0px; overflow: hidden;
+    }
+    #NotifyCard-{{ bid }} .ncard__media--landscape { aspect-ratio: 3 / 2; }
+    #NotifyCard-{{ bid }} .ncard__media--square { aspect-ratio: 1 / 1; }
+    #NotifyCard-{{ bid }} .ncard__media--portrait { aspect-ratio: 2 / 3; }
+    #NotifyCard-{{ bid }} .ncard__media--top { justify-content: flex-start; }
+    #NotifyCard-{{ bid }} .ncard__media--center { justify-content: center; }
+    #NotifyCard-{{ bid }} .ncard__media--bottom { justify-content: flex-end; }
+    #NotifyCard-{{ bid }} .ncard__overlay { padding: 1em; color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, .55)); }
+    #NotifyCard-{{ bid }} .ncard__caption { margin: 0; font-weight: 600; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #NotifyCard-{{ bid }} .ncard__heading { margin: 0 0 .6em; }
+    #NotifyCard-{{ bid }} .ncard__field { display: flex; flex-wrap: wrap; gap: 8px; }
+    #NotifyCard-{{ bid }} .ncard__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    #NotifyCard-{{ bid }} .ncard__input {
+      flex: 1 1 200px; min-width: 0; padding: .85em 1em; font: inherit;
+      border: 1px solid currentColor; border-radius: 0px; background: transparent; color: inherit;
+    }
+    #NotifyCard-{{ bid }} .ncard__btn {
+      padding: .85em 1.6em; font: inherit; font-weight: 600; cursor: pointer;
+      background: {{ s.button_bg }}; color: {{ s.button_text_color }}; border: 0; border-radius: 0px;
+    }
+    #NotifyCard-{{ bid }} .ncard__msg { margin: .8em 0 0; }
+    #NotifyCard-{{ bid }} .ncard__msg--error { color: #c62828; }
+    #NotifyCard-{{ bid }} .ncard__msg--success { color: #1b7f3b; font-weight: 600; margin: 0; }
 </style>

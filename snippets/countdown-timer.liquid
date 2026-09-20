@@ -25,10 +25,13 @@
   {%- endif -%}
 
   <div class="cdt__timer" data-cdt-timer role="timer" aria-label="{{ s.heading | escape }}">
-    <div class="cdt__unit"><span class="cdt__num" data-cdt-days>00</span><span class="cdt__label">{{ s.label_days | escape }}</span></div>
-    <div class="cdt__unit"><span class="cdt__num" data-cdt-hours>00</span><span class="cdt__label">{{ s.label_hours | escape }}</span></div>
-    <div class="cdt__unit"><span class="cdt__num" data-cdt-minutes>00</span><span class="cdt__label">{{ s.label_minutes | escape }}</span></div>
-    <div class="cdt__unit"><span class="cdt__num" data-cdt-seconds>00</span><span class="cdt__label">{{ s.label_seconds | escape }}</span></div>
+    <div class="cdt__unit"><span class="cdt__digits" data-cdt-days><span class="cdt__digit">0</span><span class="cdt__digit">0</span></span><span class="cdt__label">{{ s.label_days | escape }}</span></div>
+    <span class="cdt__sep" aria-hidden="true">:</span>
+    <div class="cdt__unit"><span class="cdt__digits" data-cdt-hours><span class="cdt__digit">0</span><span class="cdt__digit">0</span></span><span class="cdt__label">{{ s.label_hours | escape }}</span></div>
+    <span class="cdt__sep" aria-hidden="true">:</span>
+    <div class="cdt__unit"><span class="cdt__digits" data-cdt-minutes><span class="cdt__digit">0</span><span class="cdt__digit">0</span></span><span class="cdt__label">{{ s.label_minutes | escape }}</span></div>
+    <span class="cdt__sep" aria-hidden="true">:</span>
+    <div class="cdt__unit"><span class="cdt__digits" data-cdt-seconds><span class="cdt__digit">0</span><span class="cdt__digit">0</span></span><span class="cdt__label">{{ s.label_seconds | escape }}</span></div>
   </div>
 
   <div class="cdt__ended" data-cdt-ended role="status" hidden>
@@ -46,18 +49,23 @@
   #Countdown-{{ bid }}[hidden], #Countdown-{{ bid }} [hidden] { display: none !important; }
   #Countdown-{{ bid }} .cdt__heading { margin: 0 0 .4em; }
   #Countdown-{{ bid }} .cdt__sub { margin: 0 0 1em; opacity: .85; }
-  #Countdown-{{ bid }} .cdt__timer { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(6px, 1.5vw, 14px); }
-  #Countdown-{{ bid }} .cdt__unit {
-    display: flex; flex-direction: column; align-items: center;
-    min-width: clamp(56px, 9vw, 88px); padding: .6em .4em;
-    background: var(--cdt-box); color: var(--cdt-box-text); border-radius: 8px;
-  }
-  #Countdown-{{ bid }} .cdt__num {
-    font-size: clamp(1.5rem, 4vw, 2.6rem); font-weight: 700; line-height: 1;
+  #Countdown-{{ bid }} { --cdt-tile-w: clamp(28px, 6vw, 46px); --cdt-tile-h: clamp(40px, 8.5vw, 64px); }
+  #Countdown-{{ bid }} .cdt__timer { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: clamp(4px, 1.2vw, 10px); }
+  #Countdown-{{ bid }} .cdt__unit { display: flex; flex-direction: column; align-items: center; }
+  #Countdown-{{ bid }} .cdt__digits { display: flex; gap: clamp(3px, .8vw, 6px); }
+  #Countdown-{{ bid }} .cdt__digit {
+    display: flex; align-items: center; justify-content: center;
+    width: var(--cdt-tile-w); height: var(--cdt-tile-h);
+    background: var(--cdt-box); color: var(--cdt-box-text); border-radius: 4px;
+    font-size: clamp(1.1rem, 3.2vw, 1.9rem); font-weight: 700; line-height: 1;
     font-variant-numeric: tabular-nums;
   }
+  #Countdown-{{ bid }} .cdt__sep {
+    display: flex; align-items: center; height: var(--cdt-tile-h);
+    font-size: clamp(1.1rem, 3.2vw, 1.9rem); font-weight: 700; line-height: 1;
+  }
   #Countdown-{{ bid }} .cdt__label {
-    margin-top: .4em; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; opacity: .8;
+    margin-top: .5em; font-size: .8rem; letter-spacing: .04em; opacity: .9;
   }
   #Countdown-{{ bid }} .cdt__ended-text { margin: 0 0 1em; font-weight: 600; }
   #Countdown-{{ bid }} .cdt__btn {
@@ -73,6 +81,21 @@
     var timerId = null;
 
     function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+    // One tile per digit. Rebuild tiles only when the digit count changes (e.g. 100+ days).
+    function setDigits(el, str) {
+      if (el.children.length !== str.length) {
+        el.textContent = '';
+        for (var i = 0; i < str.length; i++) {
+          var d = document.createElement('span');
+          d.className = 'cdt__digit';
+          el.appendChild(d);
+        }
+      }
+      for (var j = 0; j < str.length; j++) {
+        if (el.children[j].textContent !== str[j]) el.children[j].textContent = str[j];
+      }
+    }
 
     function parseTarget(root) {
       var d = (root.dataset.date || '').trim();       // YYYY-MM-DD
@@ -126,10 +149,10 @@
         var diff = target - Date.now();
         if (diff <= 0) { showEnded(); return false; }
         var secs = Math.floor(diff / 1000);
-        els.d.textContent = pad(Math.floor(secs / 86400));
-        els.h.textContent = pad(Math.floor((secs % 86400) / 3600));
-        els.m.textContent = pad(Math.floor((secs % 3600) / 60));
-        els.s.textContent = pad(secs % 60);
+        setDigits(els.d, pad(Math.floor(secs / 86400)));
+        setDigits(els.h, pad(Math.floor((secs % 86400) / 3600)));
+        setDigits(els.m, pad(Math.floor((secs % 3600) / 60)));
+        setDigits(els.s, pad(secs % 60));
         return true;
       }
 

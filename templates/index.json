@@ -33,21 +33,33 @@
       "blocks": {
         "col_1": {
           "type": "countdown-timer-v1",
-          "settings": { "heading": "New Drop coming soon" }
+          "settings": {
+            "heading": "New Drop coming soon",
+            "background_image": "shopify://shop_images/timer-bg-img.png",
+            "height": 400
+          }
         },
         "col_2": {
           "type": "notify-card",
           "settings": {
             "caption": "Be the first to know",
             "heading": "Get notified",
-            "button_label": "Get notified"
+            "button_label": "NOTIFY ME",
+            "background_image": "shopify://shop_images/sneak-peak.png",
+            "heading_color": "#421802",
+            "input_color": "#421802",
+            "button_text_color": "#421802",
+            "overlay_text": "Sneak peak...",
+            "overlay_position": "bottom-left",
+            "overlay_size": 40,
+            "overlay_color": "#ffffff",
+            "overlay_font": "pinyon_script_n4"
           }
         }
       },
       "block_order": ["col_1", "col_2"],
       "settings": {
         "columns_desktop": 2,
-
         "title": "",
         "button_label": ""
       }
@@ -55,11 +67,12 @@
     "display_text": {
       "type": "display-text",
       "settings": {
-        "text": "NEW DROP",
+        "text": "Best sellers",
         "fill_image": "shopify://shop_images/75f75bc7f1d0ffb86ffcd889637cde77b8d6f5f6_1.png",
         "video": "shopify://files/videos/summer-drop.mp4",
-        "font_size": 200,
-        "height": 300
+        "font_size": 240,
+        "height": 260,
+        "font": "pinyon_script_n4"
       }
     },
     "image_banner": {

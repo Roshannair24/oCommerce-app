@@ -17,25 +17,47 @@
     </div>
   {%- endif -%}
 
-  {%- if section.settings.foreground_image != blank -%}
-    <div class="hero-cover__foreground">
-      {{
-        section.settings.foreground_image
-        | image_url: width: 1200
-        | image_tag: loading: 'eager', sizes: '(min-width: 750px) 50vw, 90vw', widths: '400, 600, 900, 1200'
-      }}
-    </div>
-  {%- endif -%}
+  <div
+    class="hero-cover__content hero-cover__content--{{ section.settings.content_position }}"
 
-  <div class="hero-cover__content hero-cover__content--{{ section.settings.content_position }}">
+    style="
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      width: {{ section.settings.content_width }}%;
+    "
+  >
     {%- if section.settings.heading != blank -%}
       <h2 class="hero-cover__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.foreground_image != blank -%}
+      <div
+        class="hero-cover__foreground"
+        style="align-self: center; width: {{ section.settings.foreground_width }}%;"
+      >
+        {{
+          section.settings.foreground_image
+          | image_url: width: 1200
+          | image_tag:
+            loading: 'eager',
+            sizes: '(min-width: 750px) 50vw, 90vw',
+            widths: '400, 600, 900, 1200',
+            style: 'display:block;width:100%;height:auto;'
+        }}
+      </div>
     {%- endif -%}
 
     <div class="hero-cover__buttons">
       {%- content_for 'blocks' -%}
     </div>
   </div>
+
+  {%- if section.settings.show_reviews_tab -%}
+    <a class="hero-cover__reviews-tab" href="{{ section.settings.reviews_tab_link | default: '#reviews' }}">
+      {{- section.settings.reviews_tab_label | default: 'Reviews' -}}
+    </a>
+  {%- endif -%}
 </div>
 
 {% schema %}
@@ -50,29 +72,68 @@
       "label": "Background image"
     },
     {
+      "type": "range",
+      "id": "height",
+      "label": "Section height",
+      "min": 300,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "default": 810
+    },
+    {
+      "type": "header",
+      "content": "Content box"
+    },
+    {
       "type": "image_picker",
       "id": "foreground_image",
       "label": "Foreground image"
     },
     {
       "type": "range",
-      "id": "height",
-      "label": "Section height",
-      "min": 300,
-      "max": 800,
-      "step": 20,
-      "unit": "px",
-      "default": 500
+      "id": "foreground_width",
+      "label": "Image width",
+      "info": "Percentage of the content box width. The image fills the box height when Content height is set.",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
     },
+
     {
-      "type": "header",
-      "content": "Colors"
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "top-left", "label": "Top left" },
+        { "value": "top-center", "label": "Top center" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom-left", "label": "Bottom left" },
+        { "value": "bottom-center", "label": "Bottom center" }
+      ],
+      "default": "center"
     },
+
     {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-3"
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    { "type": "header", "content": "Reviews tab" },
+    { "type": "checkbox", "id": "show_reviews_tab", "label": "Show reviews tab", "default": true },
+    { "type": "text", "id": "reviews_tab_label", "label": "Reviews tab label", "default": "Reviews" },
+    {
+      "type": "url",
+      "id": "reviews_tab_link",
+      "label": "Reviews tab link",
+      "info": "Leave empty to link to #reviews on this page."
     }
   ],
   "blocks": [

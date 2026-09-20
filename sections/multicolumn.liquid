@@ -77,81 +77,100 @@
             {% endif %}
           >
             {%- if block.type == 'countdown-timer-v1' -%}
-              <div class="multicolumn-card content-container">
+              <div
+                class="multicolumn-card content-container"
+                {% if block.settings.height > 0
+                  or block.settings.background_image != blank
+                  or block.settings.block_bg != blank
+                  or block.settings.padding_top != blank
+                %}
+                  style="
+                    {%- if block.settings.block_bg != blank -%}background-color: {{ block.settings.block_bg }};{%- endif -%}
+                    {%- if block.settings.padding_top != blank -%}padding: {{ block.settings.padding_top }}px {{ block.settings.padding_right }}px {{ block.settings.padding_bottom }}px {{ block.settings.padding_left }}px;{%- endif -%}
+                    {%- if block.settings.height > 0 -%}min-height: {{ block.settings.height }}px; display: flex; flex-direction: column; justify-content: {% case block.settings.vertical_align %}{% when 'top' %}flex-start{% when 'bottom' %}flex-end{% else %}center{% endcase %};{%- endif -%}
+                    {%- if block.settings.background_image != blank -%}background-image: url('{{ block.settings.background_image | image_url: width: 2000 }}'); background-size: cover; background-position: center; background-repeat: no-repeat;{%- endif -%}
+                  "
+                {% endif %}
+              >
                 {% render 'countdown-timer', block: block, section_id: section.id %}
               </div>
             {%- elsif block.type == 'notify-card' -%}
-              <div class="multicolumn-card">
+              <div
+                class="multicolumn-card"
+                {% if block.settings.height > 0 %}
+                  style="min-height: {{ block.settings.height }}px; display: flex; flex-direction: column; justify-content: center;"
+                {% endif %}
+              >
                 {% render 'notify-card', block: block %}
               </div>
             {%- else -%}
-            <div class="multicolumn-card content-container">
-              {%- if block.settings.image != blank -%}
-                {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'circle' %}
-                  {% assign spaced_image = true %}
-                {% endif %}
-                <div class="multicolumn-card__image-wrapper multicolumn-card__image-wrapper--{{ section.settings.image_width }}-width{% if section.settings.image_width != 'full' or spaced_image %} multicolumn-card-spacing{% endif %}">
-                  <div
-                    class="media media--transparent media--{{ section.settings.image_ratio }}"
-                    {% if section.settings.image_ratio == 'adapt' %}
-                      style="padding-bottom: {{ 1 | divided_by: highest_ratio | times: 100 }}%;"
-                    {% endif %}
-                  >
-                    {%- liquid
-                      assign number_of_columns = section.settings.columns_desktop
-                      assign number_of_columns_mobile = section.settings.columns_mobile
-                      assign grid_space_desktop = number_of_columns | minus: 1 | times: settings.spacing_grid_horizontal | plus: 100 | append: 'px'
-                      assign grid_space_tablet = number_of_columns_mobile | minus: 1 | times: settings.spacing_grid_horizontal | plus: 100 | append: 'px'
-                      assign grid_space_mobile = number_of_columns_mobile | minus: 1 | times: settings.spacing_grid_horizontal | divided_by: 2 | plus: 30 | append: 'px'
-                      if section.settings.image_width == 'half'
-                        assign image_width = 0.5
-                      elsif section.settings.image_width == 'third'
-                        assign image_width = 0.33
-                      else
-                        assign image_width = 1
-                      endif
-                    -%}
-                    {% capture sizes %}
+              <div class="multicolumn-card content-container">
+                {%- if block.settings.image != blank -%}
+                  {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'circle' %}
+                    {% assign spaced_image = true %}
+                  {% endif %}
+                  <div class="multicolumn-card__image-wrapper multicolumn-card__image-wrapper--{{ section.settings.image_width }}-width{% if section.settings.image_width != 'full' or spaced_image %} multicolumn-card-spacing{% endif %}">
+                    <div
+                      class="media media--transparent media--{{ section.settings.image_ratio }}"
+                      {% if section.settings.image_ratio == 'adapt' %}
+                        style="padding-bottom: {{ 1 | divided_by: highest_ratio | times: 100 }}%;"
+                      {% endif %}
+                    >
+                      {%- liquid
+                        assign number_of_columns = section.settings.columns_desktop
+                        assign number_of_columns_mobile = section.settings.columns_mobile
+                        assign grid_space_desktop = number_of_columns | minus: 1 | times: settings.spacing_grid_horizontal | plus: 100 | append: 'px'
+                        assign grid_space_tablet = number_of_columns_mobile | minus: 1 | times: settings.spacing_grid_horizontal | plus: 100 | append: 'px'
+                        assign grid_space_mobile = number_of_columns_mobile | minus: 1 | times: settings.spacing_grid_horizontal | divided_by: 2 | plus: 30 | append: 'px'
+                        if section.settings.image_width == 'half'
+                          assign image_width = 0.5
+                        elsif section.settings.image_width == 'third'
+                          assign image_width = 0.33
+                        else
+                          assign image_width = 1
+                        endif
+                      -%}
+                      {% capture sizes %}
                       (min-width: {{ settings.page_width }}px) calc(({{ settings.page_width }}px - {{ grid_space_desktop }}) * {{ image_width }} /  {{ number_of_columns }}),
                       (min-width: 990px) calc((100vw - {{ grid_space_desktop }}) * {{ image_width }} / {{ number_of_columns }}),
                       (min-width: 750px) calc((100vw - {{ grid_space_tablet }}) * {{ image_width }} / {{ number_of_columns_mobile }}),
                       calc((100vw - {{ grid_space_mobile }}) * {{ image_width }} / {{ number_of_columns_mobile }})
                     {% endcapture %}
-                    {{
-                      block.settings.image
-                      | image_url: width: 3200
-                      | image_tag:
-                        widths: '50, 75, 100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3200',
-                        sizes: sizes,
-                        class: 'multicolumn-card__image'
-                    }}
+                      {{
+                        block.settings.image
+                        | image_url: width: 3200
+                        | image_tag:
+                          widths: '50, 75, 100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3200',
+                          sizes: sizes,
+                          class: 'multicolumn-card__image'
+                      }}
+                    </div>
                   </div>
-                </div>
-              {%- endif -%}
-              <div class="multicolumn-card__info">
-                {%- if block.settings.title != blank -%}
-                  <h3 class="inline-richtext">{{ block.settings.title }}</h3>
                 {%- endif -%}
-                {%- if block.settings.text != blank -%}
-                  <div class="rte">{{ block.settings.text }}</div>
-                {%- endif -%}
-                {%- if block.settings.link_label != blank -%}
-                  <a
-                    class="link animate-arrow"
-                    {% if block.settings.link == blank %}
-                      role="link" aria-disabled="true"
-                    {% else %}
-                      href="{{ block.settings.link }}"
-                    {% endif %}
-                  >
-                    {{- block.settings.link_label | escape -}}
-                    <span class="svg-wrapper"
-                      ><span class="icon-wrap">&nbsp;{{ 'icon-arrow.svg' | inline_asset_content }}</span></span
+                <div class="multicolumn-card__info">
+                  {%- if block.settings.title != blank -%}
+                    <h3 class="inline-richtext">{{ block.settings.title }}</h3>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="rte">{{ block.settings.text }}</div>
+                  {%- endif -%}
+                  {%- if block.settings.link_label != blank -%}
+                    <a
+                      class="link animate-arrow"
+                      {% if block.settings.link == blank %}
+                        role="link" aria-disabled="true"
+                      {% else %}
+                        href="{{ block.settings.link }}"
+                      {% endif %}
                     >
-                  </a>
-                {%- endif -%}
+                      {{- block.settings.link_label | escape -}}
+                      <span class="svg-wrapper"
+                        ><span class="icon-wrap">&nbsp;{{ 'icon-arrow.svg' | inline_asset_content }}</span></span
+                      >
+                    </a>
+                  {%- endif -%}
+                </div>
               </div>
-            </div>
             {%- endif -%}
           </li>
         {%- endfor -%}
@@ -247,7 +266,7 @@
     {
       "type": "header",
       "content": "t:sections.multicolumn.settings.header_image.content"
-    },    
+    },
     {
       "type": "select",
       "id": "image_width",
@@ -295,23 +314,23 @@
     {
       "type": "header",
       "content": "t:sections.multicolumn.settings.header_button.content"
-    },    
+    },
     {
       "type": "text",
       "id": "button_label",
       "default": "t:sections.multicolumn.settings.button_label.default",
-      "label": "t:sections.multicolumn.settings.button_label.label", 
+      "label": "t:sections.multicolumn.settings.button_label.label",
       "info": "t:sections.multicolumn.settings.button_label.info"
     },
     {
       "type": "url",
       "id": "button_link",
       "label": "t:sections.multicolumn.settings.button_link.label"
-    },    
+    },
     {
       "type": "header",
       "content": "t:sections.multicolumn.settings.header_layout.content"
-    },     
+    },
     {
       "type": "range",
       "id": "columns_desktop",
@@ -358,7 +377,7 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
-    },    
+    },
     {
       "type": "header",
       "content": "t:sections.multicolumn.settings.header_mobile.content"
@@ -450,6 +469,34 @@
       "name": "Countdown timer",
       "settings": [
         {
+          "type": "range",
+          "id": "height",
+          "label": "Block height",
+          "info": "Minimum height. Set to 0 for automatic height.",
+          "min": 0,
+          "max": 800,
+          "step": 10,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "vertical_align",
+          "label": "Vertical alignment",
+          "info": "Position of the heading, subheading and timer inside the block. Needs a Block height above 0 to have any effect.",
+          "default": "bottom",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "center", "label": "Center" },
+            { "value": "bottom", "label": "Bottom" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background image"
+        },
+        {
           "type": "header",
           "content": "Deadline"
         },
@@ -458,7 +505,7 @@
           "id": "end_date",
           "label": "End date",
           "info": "Format: YYYY-MM-DD, e.g. 2026-11-29",
-          "default": "2026-12-31"
+          "default": "2026-10-31"
         },
         {
           "type": "text",
@@ -559,14 +606,12 @@
         {
           "type": "text",
           "id": "heading",
-          "label": "Heading",
-          "default": "Sale ends in"
+          "label": "Heading"
         },
         {
           "type": "text",
           "id": "subheading",
-          "label": "Subheading",
-          "default": "Don't miss out on our biggest offer."
+          "label": "Subheading"
         },
         {
           "type": "text",
@@ -636,13 +681,147 @@
         {
           "type": "color",
           "id": "box_color",
-          "label": "Number box",
-          "default": "#111111"
+          "label": "Digit background",
+          "default": "#ffffff"
         },
         {
           "type": "color",
           "id": "box_text_color",
-          "label": "Number box text",
+          "label": "Digit text",
+          "default": "#421802"
+        },
+        {
+          "type": "color",
+          "id": "separator_color",
+          "label": "Colon color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "block_bg",
+          "label": "Tile background",
+          "info": "Background of the whole countdown block. Leave empty for none. Shows behind the background image."
+        },
+        {
+          "type": "header",
+          "content": "Block padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Top",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_right",
+          "label": "Right",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Bottom",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 76
+        },
+        {
+          "type": "range",
+          "id": "padding_left",
+          "label": "Left",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Heading font"
+        },
+        {
+          "type": "font_picker",
+          "id": "heading_font",
+          "label": "Heading font",
+          "default": "nothing_you_could_do_n4"
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "label": "Heading size",
+          "min": 12,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "default": 28
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "header",
+          "content": "Subheading font"
+        },
+        {
+          "type": "font_picker",
+          "id": "subheading_font",
+          "label": "Subheading font",
+          "default": "nothing_you_could_do_n4"
+        },
+        {
+          "type": "range",
+          "id": "subheading_size",
+          "label": "Subheading size",
+          "min": 10,
+          "max": 48,
+          "step": 1,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "color",
+          "id": "subheading_color",
+          "label": "Subheading color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "header",
+          "content": "Label font (Days, Hours...)"
+        },
+        {
+          "type": "font_picker",
+          "id": "label_font",
+          "label": "Label font",
+          "default": "nothing_you_could_do_n4"
+        },
+        {
+          "type": "range",
+          "id": "label_size",
+          "label": "Label size",
+          "min": 8,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "default": 13
+        },
+        {
+          "type": "color",
+          "id": "label_color",
+          "label": "Label color",
           "default": "#ffffff"
         }
       ]
@@ -651,6 +830,18 @@
       "type": "notify-card",
       "name": "Email signup",
       "settings": [
+        {
+          "type": "range",
+          "id": "height",
+          "label": "Block height",
+          "info": "Minimum height. Set to 0 for automatic height.",
+          "min": 0,
+          "max": 800,
+          "step": 10,
+          "unit": "px",
+          "default": 0
+        },
+
         {
           "type": "text",
           "id": "heading",
@@ -661,38 +852,211 @@
           "type": "text",
           "id": "email_placeholder",
           "label": "Email placeholder",
-          "default": "Enter your email"
+          "default": "user@gmail.com"
         },
         {
           "type": "text",
           "id": "button_label",
           "label": "Button label",
-          "default": "Get notified"
+          "default": "NOTIFY ME"
+        },
+
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background image"
         },
         {
-          "type": "text",
-          "id": "customer_tags",
-          "label": "Customer tags",
-          "default": "newsletter, get-notified",
-          "info": "Comma-separated. Added to the customer in Shopify admin."
+          "type": "header",
+          "content": "Image text overlay"
         },
         {
-          "type": "text",
-          "id": "success_message",
-          "label": "Success message",
-          "default": "Thanks for subscribing!"
+          "type": "textarea",
+          "id": "overlay_text",
+          "label": "Overlay text",
+          "info": "Shown on top of the image. Leave empty for none."
+        },
+        {
+          "type": "select",
+          "id": "overlay_position",
+          "label": "Text position",
+          "default": "center",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "font_picker",
+          "id": "overlay_font",
+          "label": "Overlay Text style (font)",
+          "default": "assistant_n4"
+        },
+        {
+          "type": "range",
+          "id": "overlay_size",
+          "label": "Text size",
+          "min": 10,
+          "max": 120,
+          "step": 10,
+          "unit": "px",
+          "default": 30
         },
         {
           "type": "color",
-          "id": "button_bg",
-          "label": "Button background",
-          "default": "#111111"
+          "id": "overlay_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        },
+
+        { "type": "header", "content": "Card padding" },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Top",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 24
+        },
+        {
+          "type": "range",
+          "id": "padding_right",
+          "label": "Right",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 24
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Bottom",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 24
+        },
+        {
+          "type": "range",
+          "id": "padding_left",
+          "label": "Left",
+          "min": 0,
+          "max": 120,
+          "step": 4,
+          "unit": "px",
+          "default": 24
+        },
+        {
+          "type": "color",
+          "id": "card_bg",
+          "label": "Background color",
+          "info": "Fills the card behind the content. Leave empty for transparent.",
+          "default": "#FFFBF8"
+        },
+        {
+          "type": "header",
+          "content": "Heading style"
+        },
+        {
+          "type": "font_picker",
+          "id": "heading_font",
+          "label": "Heading font",
+          "default": "assistant_n4"
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "label": "Heading size",
+          "min": 12,
+          "max": 72,
+          "step": 1,
+          "unit": "px",
+          "default": 22
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color"
+        },
+        {
+          "type": "header",
+          "content": "Email input style"
+        },
+        {
+          "type": "font_picker",
+          "id": "input_font",
+          "label": "Input font",
+          "default": "assistant_n4"
+        },
+        {
+          "type": "range",
+          "id": "input_size",
+          "label": "Input text size",
+          "min": 10,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "default": 15
+        },
+        {
+          "type": "color",
+          "id": "input_color",
+          "label": "Placeholder color"
+        },
+        {
+          "type": "header",
+          "content": "Button style"
+        },
+        {
+          "type": "font_picker",
+          "id": "button_font",
+          "label": "Button font",
+          "default": "assistant_n4"
+        },
+        {
+          "type": "range",
+          "id": "button_size",
+          "label": "Button text size",
+          "min": 10,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "default": 16
         },
         {
           "type": "color",
           "id": "button_text_color",
-          "label": "Button text",
-          "default": "#ffffff"
+          "label": "Button text color"
         }
       ]
     }

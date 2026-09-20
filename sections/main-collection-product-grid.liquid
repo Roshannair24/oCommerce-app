@@ -181,7 +181,7 @@
                       section_id: section.id,
                       product_view_context: 'collection' %}
 
-                  {% render 'card-product',
+                  {% comment %} {% render 'card-product',
                       card_product: product,
                       media_aspect_ratio: section.settings.image_ratio,
                       image_shape: section.settings.image_shape,
@@ -193,7 +193,7 @@
                       quick_add: section.settings.quick_add,
                       section_id: section.id,
                       product_view_context: 'collection'
-                    %} 
+                    %}  {% endcomment %}
                   </li>
                   {%- assign skip_card_product_styles = true -%}
                 {%- endfor -%}

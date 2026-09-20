@@ -1,0 +1,150 @@
+.hero-cover {
+  position: relative;
+  height: var(--hero-height, 500px);
+  display: flex;
+  overflow: hidden;
+}
+
+.hero-cover__image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-cover__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-cover__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / var(--overlay-opacity, 0.3));
+  z-index: 1;
+}
+
+.hero-cover__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  max-width: 600px;
+  color: #fff;
+  text-align: center;
+}
+
+/* Positioning */
+.hero-cover__content--center {
+  margin: auto;
+  align-items: center;
+}
+
+.hero-cover__content--top-left {
+  margin-right: auto;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero-cover__content--top-center {
+  margin: 0 auto;
+  align-items: center;
+}
+
+.hero-cover__content--bottom-left {
+  margin-top: auto;
+  margin-right: auto;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero-cover__content--bottom-center {
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+}
+
+.hero-cover__heading {
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.1;
+}
+
+.hero-cover__text {
+  font-size: 1.1rem;
+}
+
+.hero-cover__text p {
+  margin: 0;
+}
+
+
+.hero-cover .cta-button {
+  background-color: var(--button-bg, rgb(var(--color-button)));
+  /* background-color: red; */
+  color: var(--button-text, rgb(var(--color-button-text)));
+  border: none;
+  padding: 0.75rem 1.75rem;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.hero-cover .cta-button:hover {
+  opacity: 0.85;
+}
+
+
+.hero-cover__foreground {
+  position: relative;
+   max-width: 100%;
+}
+
+.hero-cover__foreground img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hero-cover__foreground--left {
+  left: 2rem;
+}
+
+.hero-cover__foreground--center {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hero-cover__foreground--right {
+  right: 2rem;
+}
+
+/* Reviews tab: vertical tab anchored to the right edge of the hero cover*/
+.hero-cover__reviews-tab {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  padding: 1.25rem 0.75rem;
+  background-color: #fff;
+  color: #000;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 6px 0 0 6px;
+  box-shadow: -2px 0 8px rgb(0 0 0 / 0.15);
+  transition: opacity 0.2s ease;
+}
+
+.hero-cover__reviews-tab:hover {
+  opacity: 0.85;
+}

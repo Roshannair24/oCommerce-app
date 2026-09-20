@@ -39,5 +39,10 @@ The new product card is wired in the catalog page.
 
 #### Quick add
 
-- Failed requests and double clicks are not handled.
+- Failed requests, page reloading and double clicks are not handled.
+
+#### Variant wise states 
+
+- Variant wise state not handled.
+
 

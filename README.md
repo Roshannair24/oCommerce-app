@@ -37,24 +37,7 @@ A Shopify storefront build covering two tests: a landing page and a product card
 
 The new product card is wired in the catalog page.
 
-#### Color swatches
-
-- Colors don't show in the button, and images break when a swatch is clicked.
-- CSS needs updating to make the swatch translucent and the same height as the Quick add button.
-
 #### Quick add
 
-- The button adds to cart, but its background color needs to be changed.
 - Failed requests and double clicks are not handled.
 
-#### Text block
-
-- Height needs adjustment.
-
-#### Hidden layers
-
-- Rendered incorrectly.
-
-## Responsive breakpoints
-
-_TBD_

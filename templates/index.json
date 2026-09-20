@@ -62,8 +62,8 @@
         "text": "Best sellers",
         "fill_image": "shopify://shop_images/75f75bc7f1d0ffb86ffcd889637cde77b8d6f5f6_1.png",
         "video": "shopify://files/videos/summer-drop.mp4",
-        "font_size": 300,
-        "height": 300,
+        "font_size": 240,
+        "height": 260,
         "font":"pinyon_script_n4"
       }
     },

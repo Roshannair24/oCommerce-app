@@ -48,14 +48,18 @@
             "background_image": "shopify://shop_images/sneak-peak.png",
             "heading_color": "#421802",
             "input_color": "#421802",
-            "button_text_color": "#421802"
+            "button_text_color": "#421802",
+            "overlay_text": "Sneak peak...",
+            "overlay_position": "bottom-left",
+            "overlay_size": 40,
+            "overlay_color": "#ffffff",
+            "overlay_font": "pinyon_script_n4"
           }
         }
       },
       "block_order": ["col_1", "col_2"],
       "settings": {
         "columns_desktop": 2,
-
         "title": "",
         "button_label": ""
       }

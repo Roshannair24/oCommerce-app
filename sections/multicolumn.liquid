@@ -866,6 +866,74 @@
           "id": "background_image",
           "label": "Background image"
         },
+        {
+          "type": "header",
+          "content": "Image text overlay"
+        },
+        {
+          "type": "textarea",
+          "id": "overlay_text",
+          "label": "Overlay text",
+          "info": "Shown on top of the image. Leave empty for none."
+        },
+        {
+          "type": "select",
+          "id": "overlay_position",
+          "label": "Text position",
+          "default": "center",
+          "options": [
+            {
+              "value": "top-left",
+              "label": "Top left"
+            },
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "top-right",
+              "label": "Top right"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            }
+          ]
+        },
+        {
+          "type": "font_picker",
+          "id": "overlay_font",
+          "label": "Overlay Text style (font)",
+          "default": "assistant_n4"
+        },
+        {
+          "type": "range",
+          "id": "overlay_size",
+          "label": "Text size",
+          "min": 10,
+          "max": 120,
+          "step": 10,
+          "unit": "px",
+          "default": 30
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        },
 
         { "type": "header", "content": "Card padding" },
         {

@@ -102,13 +102,7 @@
 
 
 .hero-cover__foreground {
-  /* position: absolute; */
   position: relative;
-  /* z-index: 2; */
-  /* top: 50%;
-  transform: translateY(-50%);
-  width: var(--foreground-width, 40%);
-  max-width: 90%; */
    max-width: 100%;
 }
 
@@ -131,7 +125,7 @@
   right: 2rem;
 }
 
-/* Reviews tab: vertical tab anchored to the right edge of the hero */
+/* Reviews tab: vertical tab anchored to the right edge of the hero cover*/
 .hero-cover__reviews-tab {
   position: absolute;
   z-index: 3;

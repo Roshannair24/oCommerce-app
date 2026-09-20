@@ -35,6 +35,8 @@ A Shopify storefront build covering two tests: a landing page and a product card
 
 ### Test 2 – Product card
 
+The new product card is wired in the catalog page.
+
 #### Color swatches
 
 - Colors don't show in the button, and images break when a swatch is clicked.

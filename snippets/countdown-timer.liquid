@@ -1,11 +1,3 @@
-{%- comment -%}
-  snippets/countdown-timer.liquid
-  Renders a countdown timer for one block.
-  Usage (inside a section's block loop):
-    {% render 'countdown-timer', block: block, section_id: section.id %}
-  All settings come from block.settings; ids are scoped to block.id so several timers can share a page.
-{%- endcomment -%}
-
 {%- liquid
   assign bid = block.id
   assign s = block.settings

@@ -96,7 +96,7 @@
 
   <product-card-v2
     class="pc{% unless init_variant.available %} is-soldout{% endunless %}"
-    style="background-color: yellow;"
+    {% comment %} style="background-color: yellow;" {% endcomment %}
   >
     <div class="pc__media">
       {%- if img -%}
